@@ -1,0 +1,16 @@
+{
+  "name": "İslam — Quran & Namaz",
+  "short_name": "İslam",
+  "description": "Quran, Namaz, Hədiслər, 99 Allahın adı, Namaz vaxtları",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080f0a",
+  "theme_color": "#0a1a12",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["lifestyle", "religion"],
+  "lang": "az"
+}

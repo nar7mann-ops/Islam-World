@@ -1,5 +1,4 @@
-const CACHE_NAME = 'islam-v-final';
-// Кэшируем только самое необходимое и через относительные пути
+const CACHE_NAME = 'islam-v-force-update';
 const ASSETS = [
   './',
   './index.html',
@@ -11,10 +10,9 @@ const ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // addAll может упасть, если один файл не найден, 
-      // поэтому используем более мягкий способ
+      // Кэшируем файлы по одному, чтобы ошибка в одном не ломала всё
       return Promise.allSettled(
-        ASSETS.map(url => cache.add(url))
+        ASSETS.map(url => cache.add(url).catch(err => console.log('Не критично:', url)))
       );
     })
   );
@@ -25,7 +23,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        keys.map((key) => caches.delete(key)) // Удаляем ВООБЩЕ всё старое
       );
     })
   );
@@ -33,10 +31,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Стратегия: Сначала сеть, если упала — кэш
+  // Прямая стратегия: сначала интернет. Если интернета нет — только тогда кэш.
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });

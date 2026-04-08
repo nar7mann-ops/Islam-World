@@ -1,3 +1,23 @@
+
+/* ============================================================
+   РЕГИСТРАЦИЯ SERVICE WORKER (PWA)
+============================================================ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Используем 'sw.js', так как файл лежит в той же папке
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker зарегистрирован!', reg))
+      .catch(err => console.log('Ошибка регистрации SW:', err));
+  });
+}
+
+/* Далее идет твой основной код приложения (App, Quran, Namaz и т.д.) */
+const App = {
+  start: function() {
+    // ... твой код ...
+  },
+  // ... остальное ...
+};
 /* ============================================================
    İSLAM APP — script.js
    Modules: App, Auth, Quran, Namaz, Hadith, PrayerTimes, i18n

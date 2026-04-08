@@ -45,7 +45,7 @@ self.addEventListener('push', e => {
   const data = e.data ? e.data.json() : {};
   self.registration.showNotification(data.title || '☪ İslam', {
     body: data.body || 'Namaz vaxtı gəldi',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: '/images.png',
+    badge: '/images.png',
   });
 });

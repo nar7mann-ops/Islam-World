@@ -2,14 +2,14 @@
    İSLAM APP — Service Worker (PWA)
    Offline caching for core assets
 ============================================================ */
-const CACHE = 'islam-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/manifest.json',
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.json'
 ];
+
 
 self.addEventListener('install', e => {
   e.waitUntil(

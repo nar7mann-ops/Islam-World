@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="az" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+  <meta name="theme-color" content="#0a1a12"/>
+  <meta name="description" content="İslam — Quran, Namaz, Hədiслər, 99 Allahın adı"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="İslam"/>
+  <title>İslam — Quran & Namaz</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon-192.png"/>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ============================================================
+     SPLASH / INTRO SCREEN
+============================================================ -->
+<div id="splash">
+  <div class="splash-stars" id="splashStars"></div>
+  <div class="splash-moon"></div>
+  <div class="splash-content">
+    <div class="splash-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+    <div class="splash-title">İSLAM</div>
+    <div class="splash-subtitle">Quran · Namaz · Hədiслər · Dua</div>
+    <div class="splash-divider"><span></span><i></i><span></span></div>
+    <button class="splash-btn" onclick="App.start()">
+      <span>Daxil ol</span>
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+  <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+</div>
+
+<!-- ============================================================
+     MAIN APP
+============================================================ -->
+<div id="app" class="hidden">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <button class="topbar-btn" id="menuBtn" onclick="App.toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="topbar-center">
+      <div class="topbar-logo">☪ İSLAM</div>
+      <div class="topbar-prayer" id="nextPrayerBar">— Namazın vaxtı yüklənir —</div>
+    </div>
+    <button class="topbar-btn" onclick="App.openLang()">
+      <i class="fas fa-globe"></i>
+    </button>
+  </header>
+
+  <!-- SIDE MENU -->
+  <nav class="sidemenu" id="sideMenu">
+    <div class="sidemenu-header">
+      <div class="sidemenu-logo">☪ İSLAM</div>
+      <button class="sidemenu-close" onclick="App.toggleMenu()"><i class="fas fa-times"></i></button>
+    </div>
+    <ul class="sidemenu-links">
+      <li><a href="#" onclick="App.goSection('quran')"><i class="fas fa-book-open"></i> <span data-i18n="nav_quran">Quran</span></a></li>
+      <li><a href="#" onclick="App.goSection('namaz')"><i class="fas fa-pray"></i> <span data-i18n="nav_namaz">Namaz</span></a></li>
+      <li><a href="#" onclick="App.goSection('wudu')"><i class="fas fa-tint"></i> <span data-i18n="nav_wudu">Dəstəmaz</span></a></li>
+      <li><a href="#" onclick="App.goSection('hadith')"><i class="fas fa-scroll"></i> <span data-i18n="nav_hadith">Hədiслər</span></a></li>
+      <li><a href="#" onclick="App.goSection('history')"><i class="fas fa-mosque"></i> <span data-i18n="nav_history">Tarix</span></a></li>
+      <li><a href="#" onclick="App.goSection('names99')"><i class="fas fa-star-and-crescent"></i> <span data-i18n="nav_names">99 Ad</span></a></li>
+      <li><a href="#" onclick="App.goSection('prophets')"><i class="fas fa-users"></i> <span data-i18n="nav_prophets">Peyğəmbərlər</span></a></li>
+      <li><a href="#" onclick="App.goSection('tips')"><i class="fas fa-heart"></i> <span data-i18n="nav_tips">İslam Məsləhətləri</span></a></li>
+      <li><a href="#" onclick="App.goSection('prayer_times')"><i class="fas fa-clock"></i> <span data-i18n="nav_times">Namaz Vaxtları</span></a></li>
+      <li><a href="#" onclick="App.goSection('profile')"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profil</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidemenu-overlay" id="menuOverlay" onclick="App.toggleMenu()"></div>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ===== HOME / DASHBOARD ===== -->
+    <section id="sec-home" class="section active">
+      <div class="home-hero">
+        <div class="home-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div class="home-greeting" id="homeGreeting">Assalamu Alaykum</div>
+        <div class="home-date" id="homeDate"></div>
+      </div>
+
+      <!-- Prayer Times Widget -->
+      <div class="prayer-widget" id="prayerWidget">
+        <div class="prayer-widget-title"><i class="fas fa-clock"></i> <span data-i18n="prayer_times">Namaz Vaxtları</span></div>
+        <div class="prayer-times-grid" id="prayerTimesGrid">
+          <div class="prayer-loading"><i class="fas fa-spinner fa-spin"></i> Yüklənir...</div>
+        </div>
+        <div class="prayer-location" id="prayerLocation"></div>
+        <!-- Azan player -->
+        <div class="azan-player" id="azanPlayer" style="display:none">
+          <div class="azan-player-title"><i class="fas fa-volume-up"></i> Azan dinlə</div>
+          <div class="azan-choices">
+            <button class="azan-btn active" onclick="App.playAzan('makkah')">Məkkə</button>
+            <button class="azan-btn" onclick="App.playAzan('madinah')">Mədinə</button>
+            <button class="azan-btn" onclick="App.playAzan('turkey')">Türkiyə</button>
+            <button class="azan-btn" onclick="App.playAzan('egypt')">Misir</button>
+          </div>
+          <audio id="azanAudio" style="display:none"></audio>
+        </div>
+      </div>
+
+      <!-- Quick Nav Cards -->
+      <div class="quick-cards">
+        <div class="quick-card" onclick="App.goSection('quran')">
+          <div class="quick-card-icon">📖</div>
+          <div class="quick-card-label" data-i18n="nav_quran">Quran</div>
+        </div>
+        <div class="quick-card" onclick="App.goSection('namaz')">
+          <div class="quick-card-icon">🕌</div>
+          <div class="quick-card-label" data-i18n="nav_namaz">Namaz</div>
+        </div>
+        <div class="quick-card" onclick="App.goSection('wudu')">
+          <div class="quick-card-icon">💧</div>
+          <div class="quick-card-label" data-i18n="nav_wudu">Dəstəmaz</div>
+        </div>
+        <div class="quick-card" onclick="App.goSection('hadith')">
+          <div class="quick-card-icon">📜</div>
+          <div class="quick-card-label" data-i18n="nav_hadith">Hədiслər</div>
+        </div>
+        <div class="quick-card" onclick="App.goSection('names99')">
+          <div class="quick-card-icon">✨</div>
+          <div class="quick-card-label" data-i18n="nav_names">99 Ad</div>
+        </div>
+        <div class="quick-card" onclick="App.goSection('tips')">
+          <div class="quick-card-icon">💚</div>
+          <div class="quick-card-label" data-i18n="nav_tips">Məsləhət</div>
+        </div>
+      </div>
+
+      <!-- Daily Hadith -->
+      <div class="daily-card">
+        <div class="daily-card-tag"><i class="fas fa-star"></i> Günün Hədisi</div>
+        <div class="daily-card-text" id="dailyHadith">Yüklənir...</div>
+        <div class="daily-card-source" id="dailyHadithSource"></div>
+      </div>
+    </section>
+
+    <!-- ===== QURAN SECTION ===== -->
+    <section id="sec-quran" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_quran">Quran</h2>
+      </div>
+
+      <!-- Language selector for Quran translation -->
+      <div class="quran-lang-bar">
+        <div class="quran-lang-label">Tərcümə dili:</div>
+        <div class="quran-lang-btns" id="quranLangBtns">
+          <button class="qlang-btn active" data-lang="az" onclick="Quran.setLang('az')">AZ</button>
+          <button class="qlang-btn" data-lang="ru" onclick="Quran.setLang('ru')">RU</button>
+          <button class="qlang-btn" data-lang="en" onclick="Quran.setLang('en')">EN</button>
+          <button class="qlang-btn" data-lang="de" onclick="Quran.setLang('de')">DE</button>
+          <button class="qlang-btn" data-lang="fr" onclick="Quran.setLang('fr')">FR</button>
+          <button class="qlang-btn" data-lang="tr" onclick="Quran.setLang('tr')">TR</button>
+          <button class="qlang-btn" data-lang="ja" onclick="Quran.setLang('ja')">JA</button>
+          <button class="qlang-btn" data-lang="zh" onclick="Quran.setLang('zh')">ZH</button>
+        </div>
+      </div>
+
+      <!-- Surah list -->
+      <div class="surah-search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="surahSearch" placeholder="Surə axtar..." oninput="Quran.search(this.value)"/>
+      </div>
+      <div class="surah-list" id="surahList">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== QURAN READER ===== -->
+    <section id="sec-reader" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('quran')"><i class="fas fa-arrow-left"></i></button>
+        <h2 id="readerTitle">əl-Fatihə</h2>
+        <button class="topbar-btn" onclick="Quran.toggleTranslation()"><i class="fas fa-language"></i></button>
+      </div>
+      <div class="reader-body" id="readerBody">
+        <!-- Filled by JS -->
+      </div>
+      <div class="reader-nav">
+        <button class="reader-nav-btn" id="prevSurahBtn" onclick="Quran.prevSurah()"><i class="fas fa-chevron-left"></i> Əvvəlki</button>
+        <div class="reader-progress"><div class="reader-progress-fill" id="readerProgress"></div></div>
+        <button class="reader-nav-btn" id="nextSurahBtn" onclick="Quran.nextSurah()">Növbəti <i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <!-- ===== NAMAZ SECTION ===== -->
+    <section id="sec-namaz" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_namaz">Namaz (Sünni)</h2>
+      </div>
+      <div class="namaz-intro">
+        <p>Sünni İslam üzrə beş vaxt namazın qılınma qaydası — animasiyalarla izah</p>
+      </div>
+      <div class="namaz-prayers-list">
+        <div class="namaz-prayer-card" onclick="Namaz.open('fajr')">
+          <div class="namaz-prayer-icon">🌅</div>
+          <div class="namaz-prayer-info">
+            <h3>Sübh (Fəcr)</h3>
+            <p>2 rükət</p>
+          </div>
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="namaz-prayer-card" onclick="Namaz.open('dhuhr')">
+          <div class="namaz-prayer-icon">☀️</div>
+          <div class="namaz-prayer-info">
+            <h3>Zöhr</h3>
+            <p>4 rükət</p>
+          </div>
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="namaz-prayer-card" onclick="Namaz.open('asr')">
+          <div class="namaz-prayer-icon">🌤️</div>
+          <div class="namaz-prayer-info">
+            <h3>Əsr</h3>
+            <p>4 rükət</p>
+          </div>
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="namaz-prayer-card" onclick="Namaz.open('maghrib')">
+          <div class="namaz-prayer-icon">🌇</div>
+          <div class="namaz-prayer-info">
+            <h3>Məğrib</h3>
+            <p>3 rükət</p>
+          </div>
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="namaz-prayer-card" onclick="Namaz.open('isha')">
+          <div class="namaz-prayer-icon">🌙</div>
+          <div class="namaz-prayer-info">
+            <h3>İşa</h3>
+            <p>4 rükət</p>
+          </div>
+          <i class="fas fa-play-circle"></i>
+        </div>
+      </div>
+
+      <!-- Namaz Animation Modal -->
+      <div class="namaz-modal hidden" id="namazModal">
+        <div class="namaz-modal-inner">
+          <button class="modal-close" onclick="Namaz.close()"><i class="fas fa-times"></i></button>
+          <div class="namaz-step-title" id="namazStepTitle">Niyyət</div>
+          <div class="namaz-anim-wrap">
+            <div class="namaz-figure" id="namazFigure">
+              <!-- SVG figure animated by JS -->
+            </div>
+            <div class="namaz-step-arabic" id="namazStepArabic"></div>
+          </div>
+          <div class="namaz-step-desc" id="namazStepDesc"></div>
+          <div class="namaz-step-transliteration" id="namazStepTranslit"></div>
+          <div class="namaz-controls">
+            <button class="namaz-ctrl-btn" id="namazPrevBtn" onclick="Namaz.prevStep()"><i class="fas fa-chevron-left"></i></button>
+            <div class="namaz-step-dots" id="namazDots"></div>
+            <button class="namaz-ctrl-btn" id="namazNextBtn" onclick="Namaz.nextStep()"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WUDU / DƏSTƏMAZ ===== -->
+    <section id="sec-wudu" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_wudu">Dəstəmaz</h2>
+      </div>
+      <div class="wudu-intro">
+        <p>Namazdan əvvəl dəstəmazın düzgün alınması — addım-addım animasiya ilə</p>
+      </div>
+      <div class="wudu-steps" id="wuduSteps">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== HADITH SECTION ===== -->
+    <section id="sec-hadith" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_hadith">Hədiслər (500+)</h2>
+      </div>
+      <div class="hadith-filters">
+        <button class="hadith-filter active" onclick="Hadith.filter('all')">Hamısı</button>
+        <button class="hadith-filter" onclick="Hadith.filter('bukhari')">Buxari</button>
+        <button class="hadith-filter" onclick="Hadith.filter('muslim')">Muslim</button>
+        <button class="hadith-filter" onclick="Hadith.filter('tirmidhi')">Tirmizi</button>
+        <button class="hadith-filter" onclick="Hadith.filter('abudawud')">Əbu Davud</button>
+        <button class="hadith-filter" onclick="Hadith.filter('nasai')">Nəsai</button>
+      </div>
+      <div class="hadith-search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="hadithSearch" placeholder="Hədis axtar..." oninput="Hadith.search(this.value)"/>
+      </div>
+      <div class="hadith-list" id="hadithList">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== HISTORY ===== -->
+    <section id="sec-history" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_history">İslam Tarixi</h2>
+      </div>
+      <div class="timeline" id="historyTimeline">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== 99 NAMES ===== -->
+    <section id="sec-names99" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_names">Allahın 99 Adı</h2>
+      </div>
+      <div class="names99-grid" id="names99Grid">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== PROPHETS ===== -->
+    <section id="sec-prophets" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_prophets">Peyğəmbərlər</h2>
+      </div>
+      <div class="prophets-grid" id="prophetsGrid">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== TIPS ===== -->
+    <section id="sec-tips" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_tips">İslam Məsləhətləri</h2>
+      </div>
+      <div class="tips-grid" id="tipsGrid">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== PRAYER TIMES ===== -->
+    <section id="sec-prayer_times" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_times">Namaz Vaxtları</h2>
+      </div>
+      <div class="prayer-times-full" id="prayerTimesFull">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ===== PROFILE ===== -->
+    <section id="sec-profile" class="section">
+      <div class="section-header">
+        <button class="back-btn" onclick="App.goSection('home')"><i class="fas fa-arrow-left"></i></button>
+        <h2 data-i18n="nav_profile">Profilim</h2>
+      </div>
+      <div id="profileArea">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="bottom-nav-btn active" onclick="App.goSection('home')" data-sec="home">
+      <i class="fas fa-home"></i>
+      <span>Ana</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="App.goSection('quran')" data-sec="quran">
+      <i class="fas fa-book-open"></i>
+      <span>Quran</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="App.goSection('namaz')" data-sec="namaz">
+      <i class="fas fa-pray"></i>
+      <span>Namaz</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="App.goSection('hadith')" data-sec="hadith">
+      <i class="fas fa-scroll"></i>
+      <span>Hədiслər</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="App.goSection('profile')" data-sec="profile">
+      <i class="fas fa-user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- LANGUAGE MODAL -->
+<div class="lang-modal hidden" id="langModal">
+  <div class="lang-modal-inner">
+    <div class="lang-modal-title"><i class="fas fa-globe"></i> Dil seç</div>
+    <div class="lang-grid">
+      <button onclick="App.setLang('az')">🇦🇿 Azərbaycan</button>
+      <button onclick="App.setLang('ru')">🇷🇺 Русский</button>
+      <button onclick="App.setLang('en')">🇬🇧 English</button>
+      <button onclick="App.setLang('tr')">🇹🇷 Türkçe</button>
+      <button onclick="App.setLang('de')">🇩🇪 Deutsch</button>
+      <button onclick="App.setLang('fr')">🇫🇷 Français</button>
+      <button onclick="App.setLang('ja')">🇯🇵 日本語</button>
+      <button onclick="App.setLang('zh')">🇨🇳 中文</button>
+      <button onclick="App.setLang('ar')">🇸🇦 العربية</button>
+      <button onclick="App.setLang('es')">🇪🇸 Español</button>
+    </div>
+    <button class="lang-close" onclick="App.closeLang()"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="login-modal hidden" id="loginModal">
+  <div class="login-modal-inner">
+    <button class="modal-close" onclick="Auth.closeLogin()"><i class="fas fa-times"></i></button>
+    <div class="login-icon">☪</div>
+    <h3>Daxil ol</h3>
+    <p>Profilinə, səviyyənə və bildirişlərə çıxış əldə et</p>
+    <button class="google-btn" onclick="Auth.loginGoogle()">
+      <i class="fab fa-google"></i> Google ilə daxil ol
+    </button>
+    <div class="login-divider">və ya</div>
+    <input type="email" id="loginEmail" placeholder="Email"/>
+    <input type="password" id="loginPass" placeholder="Şifrə"/>
+    <button class="login-submit" onclick="Auth.loginEmail()">Daxil ol</button>
+    <button class="register-btn" onclick="Auth.showRegister()">Qeydiyyat</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

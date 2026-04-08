@@ -2,7 +2,7 @@
   "name": "İslam — Quran & Namaz",
   "short_name": "İslam",
   "description": "Quran, Namaz, Hədiслər, 99 Allahın adı, Namaz vaxtları",
-  "start_url": "./",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#080f0a",
   "theme_color": "#0a1a12",

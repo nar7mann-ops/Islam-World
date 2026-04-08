@@ -1,7 +1,4 @@
-/* ============================================================
-   İSLAM APP — Service Worker (PWA)
-   Offline caching for core assets
-============================================================ */
+const CACHE = 'islam-v2'; // Поменяли версию, чтобы браузер обновился
 const ASSETS = [
   './',
   './index.html',
@@ -9,7 +6,6 @@ const ASSETS = [
   './script.js',
   './manifest.json'
 ];
-
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -26,26 +22,7 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network first, fallback to cache
   e.respondWith(
-    fetch(e.request)
-      .then(r => {
-        if (r && r.status === 200 && e.request.method === 'GET') {
-          const clone = r.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-        }
-        return r;
-      })
-      .catch(() => caches.match(e.request))
+    fetch(e.request).catch(() => caches.match(e.request))
   );
-});
-
-// Push notifications
-self.addEventListener('push', e => {
-  const data = e.data ? e.data.json() : {};
-  self.registration.showNotification(data.title || '☪ İslam', {
-    body: data.body || 'Namaz vaxtı gəldi',
-    icon: '/images.png',
-    badge: '/images.png',
-  });
 });

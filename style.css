@@ -525,27 +525,12 @@ img { max-width: 100%; }
 }
 .namaz-anim-wrap { text-align: center; margin-bottom: 20px; }
 .namaz-figure {
-  /* Мы убираем фиксированную высоту, чтобы фото масштабировались пропорционально */
-  width: 100%; /* Занимает всю ширину контейнера .namaz-anim-wrap */
-  max-width: 200px; /* Ограничиваем максимальную ширину фото */
-  height: auto; /* Высота подстраивается автоматически */
-  margin: 0 auto 16px;
-  display: flex; /* Центрирование */
-  justify-content: center;
-  align-items: center;
-  min-height: 180px; /* Минимальная высота, чтобы текст снизу не прыгал */
+  width: 120px; height: 160px; margin: 0 auto 16px;
+  position: relative;
 }
+/* Stick figure SVG base */
+.namaz-figure svg { width: 100%; height: 100%; }
 
-/* Стили для новых изображений */
-.namaz-photo {
-  max-width: 100%;
-  max-height: 250px; /* Ограничиваем высоту самого фото */
-  height: auto;
-  display: block;
-  object-fit: contain; /* Сохраняет пропорции, вписываясь в область */
-  /* Опционально: можно добавить легкое свечение, как у старого SVG */
-  filter: drop-shadow(0 0 10px rgba(201,168,76,0.3));
-}
 
 .namaz-step-arabic {
   font-family: var(--font-arabic); font-size: 22px;
